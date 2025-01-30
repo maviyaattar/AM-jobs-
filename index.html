@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,139 +7,243 @@
   <style>
     body {
       font-family: Arial, sans-serif;
-      background: linear-gradient(135deg, #6a11cb, #2575fc);
+      background: linear-gradient(45deg, #0000ff, #800080);
+      color: white;
+      margin: 0;
+      padding: 0;
       display: flex;
       justify-content: center;
       align-items: center;
       height: 100vh;
-      margin: 0;
-      color: white;
     }
 
-    .container {
-      width: 100%;
-      max-width: 400px;
-      background: rgba(255, 255, 255, 0.1);
-      padding: 20px;
+    .login-container {
+      text-align: center;
+      background: rgba(0, 0, 0, 0.7);
+      padding: 40px;
       border-radius: 10px;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-      backdrop-filter: blur(10px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
     }
 
-    .button {
-      display: block;
-      width: 100%;
+    input {
       padding: 10px;
-      margin: 10px 0;
-      background: #ff6347;
+      margin: 10px;
+      width: 200px;
       border: none;
       border-radius: 5px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    }
+
+    button {
+      padding: 10px;
+      margin-top: 10px;
+      width: 220px;
+      background-color: #4CAF50;
       color: white;
+      border: none;
+      border-radius: 5px;
       cursor: pointer;
-      font-size: 16px;
-      transition: 0.3s ease;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
     }
 
-    .button:hover {
-      background: #ff4500;
+    button:hover {
+      background-color: #45a049;
     }
 
-    .google-button {
-      background: #db4437;
+    .social-login {
+      margin-top: 20px;
     }
 
-    .google-button:hover {
-      background: #c1351d;
+    .social-login button {
+      background-color: #DB4437;
     }
 
-    .header {
-      text-align: center;
-      margin-bottom: 20px;
-    }
-
-    .header h2 {
-      margin: 0;
-      font-size: 24px;
+    .social-login button:hover {
+      background-color: #d1362f;
     }
   </style>
 </head>
-
 <body>
 
-  <div class="container">
-    <div class="header">
-      <h2>Login to Your Account</h2>
-    </div>
+  <div class="login-container">
+    <h2>Login</h2>
+    <form id="login-form">
+      <input type="email" id="email" placeholder="Enter your email" required><br>
+      <input type="password" id="password" placeholder="Enter your password" required><br>
+      <button type="submit">Login with Email</button>
+    </form>
 
-    <button class="button" id="email-login-btn">Login with Email</button>
-    <button class="button google-button" id="google-login-btn">Login with Google</button>
+    <div class="social-login">
+      <button id="google-login">Login with Google</button>
+    </div>
   </div>
 
   <!-- Firebase SDK -->
-  <script type="module">
-    // Import the functions you need from the SDKs you need
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-app.js";
-    import { getAuth, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-auth.js";
-    
-    // Firebase Configuration
-    const firebaseConfig = {
-      apiKey: "AIzaSyAgZXfvD10mMt7yRbfnUlQYVwsOrt3xN0g",
-      authDomain: "amjobs706.firebaseapp.com",
-      projectId: "amjobs706",
-      storageBucket: "amjobs706.firebasestorage.app",
-      messagingSenderId: "292380958782",
-      appId: "1:292380958782:web:235273cfc5a5b496cef16f",
-      measurementId: "G-F9TCLZV8ZW"
-    };
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-app.js";
+  import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-auth.js";
 
-    // Initialize Firebase
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth();
+  // Firebase Configuration
+  const firebaseConfig = {
+    apiKey: "AIzaSyAgZXfvD10mMt7yRbfnUlQYVwsOrt3xN0g",
+    authDomain: "amjobs706.firebaseapp.com",
+    projectId: "amjobs706",
+    storageBucket: "amjobs706.firebasestorage.app",
+    messagingSenderId: "292380958782",
+    appId: "1:292380958782:web:235273cfc5a5b496cef16f",
+    measurementId: "G-F9TCLZV8ZW"
+  };
 
-    // Google login provider
-    const googleProvider = new GoogleAuthProvider();
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth();
 
-    // Email login
-    document.getElementById('email-login-btn').addEventListener('click', () => {
-      const email = prompt('Enter your email:');
-      const password = prompt('Enter your password:');
-      
-      signInWithEmailAndPassword(auth, email, password)
-        .then((userCredential) => {
-          const user = userCredential.user;
-          console.log('Logged in as: ', user.displayName);
-          alert('Login Successful');
-          window.location.href = 'user.html'; // Redirect to user page after successful login
-        })
-        .catch((error) => {
-          console.error('Error during email login: ', error.message);
-          alert('Login failed. Please try again.');
-        });
-    });
+  // Google Sign-In
+  const googleProvider = new GoogleAuthProvider();
+  document.getElementById('google-login').addEventListener('click', () => {
+    signInWithPopup(auth, googleProvider)
+      .then((result) => {
+        const user = result.user;
+        console.log('Logged in as: ', user.displayName);
+        window.location.href = 'user.html';  // Redirect to user page after successful login
+      })
+      .catch((error) => {
+        console.error('Error during login: ', error.message);
+        alert('Login failed. Please try again.');
+      });
+  });
 
-    // Google login
-    document.getElementById('google-login-btn').addEventListener('click', () => {
-      signInWithPopup(auth, googleProvider)
-        .then((result) => {
-          const user = result.user;
-          console.log('Logged in as: ', user.displayName);
-          alert('Login Successful');
-          window.location.href = 'user.html'; // Redirect to user page after successful login
-        })
-        .catch((error) => {
-          console.error('Error during Google login: ', error.message);
-          alert('Google login failed. Please try again.');
-        });
-    });
-
-    // Monitor authentication state
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        console.log("User is signed in:", user);
-        window.location.href = 'user.html'; // Redirect if user is already logged in
-      }
-    });
-  </script>
+  // Handle user state change
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      console.log("User is signed in:", user);
+      window.location.href = 'user.html';  // Redirect if user is already logged in
+    }
+  });
+</script>
 </body>
+</html><!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login Page</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(45deg, #0000ff, #800080);
+      color: white;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
 
+    .login-container {
+      text-align: center;
+      background: rgba(0, 0, 0, 0.7);
+      padding: 40px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+    }
+
+    input {
+      padding: 10px;
+      margin: 10px;
+      width: 200px;
+      border: none;
+      border-radius: 5px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    }
+
+    button {
+      padding: 10px;
+      margin-top: 10px;
+      width: 220px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+
+    .social-login {
+      margin-top: 20px;
+    }
+
+    .social-login button {
+      background-color: #DB4437;
+    }
+
+    .social-login button:hover {
+      background-color: #d1362f;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="login-container">
+    <h2>Login</h2>
+    <form id="login-form">
+      <input type="email" id="email" placeholder="Enter your email" required><br>
+      <input type="password" id="password" placeholder="Enter your password" required><br>
+      <button type="submit">Login with Email</button>
+    </form>
+
+    <div class="social-login">
+      <button id="google-login">Login with Google</button>
+    </div>
+  </div>
+
+  <!-- Firebase SDK -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-app.js";
+  import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-auth.js";
+
+  // Firebase Configuration
+  const firebaseConfig = {
+    apiKey: "AIzaSyAgZXfvD10mMt7yRbfnUlQYVwsOrt3xN0g",
+    authDomain: "amjobs706.firebaseapp.com",
+    projectId: "amjobs706",
+    storageBucket: "amjobs706.firebasestorage.app",
+    messagingSenderId: "292380958782",
+    appId: "1:292380958782:web:235273cfc5a5b496cef16f",
+    measurementId: "G-F9TCLZV8ZW"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth();
+
+  // Google Sign-In
+  const googleProvider = new GoogleAuthProvider();
+  document.getElementById('google-login').addEventListener('click', () => {
+    signInWithPopup(auth, googleProvider)
+      .then((result) => {
+        const user = result.user;
+        console.log('Logged in as: ', user.displayName);
+        window.location.href = 'user.html';  // Redirect to user page after successful login
+      })
+      .catch((error) => {
+        console.error('Error during login: ', error.message);
+        alert('Login failed. Please try again.');
+      });
+  });
+
+  // Handle user state change
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      console.log("User is signed in:", user);
+      window.location.href = 'user.html';  // Redirect if user is already logged in
+    }
+  });
+</script>
+</body>
 </html>
